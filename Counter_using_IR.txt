@@ -1,0 +1,48 @@
+#include <LiquidCrystal_I2C.h>
+#include <wire.h>
+#include<Arduino.h>
+int irPin = 2;
+int count = 0;
+bool objectdetected = false;
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+
+void setup(){
+  lcd.init();
+  lcd.backlight();
+  pinMode (irPin, INPUT);
+  lcd.begin(16, 2);
+  Serial.begin(9600);
+
+}
+
+void updateDisplay() {
+    lcd.setCursor(1, 0);       
+    lcd.print("count = ");        
+    lcd.setCursor(1, 0);       
+    lcd.print(count);          
+}
+
+
+void loop()
+{
+  //Serial.print(irPin);
+  lcd.display();
+ 
+  bool state = digitalRead(irPin);
+ 
+  if(state == LOW && !objectdetected ){
+    count++;
+    objectdetected = true;
+    updateDisplay();
+    Serial.print("count = ");
+    Serial.println(count);
+delay(500);
+  }
+  else if(state = HIGH && objectdetected){
+    objectdetected =  false;
+  }
+}
+
+  
+
